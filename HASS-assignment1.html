@@ -1,0 +1,114 @@
+
+<!doctype html>
+<html>
+<head>
+<title>Assignment 1</title>
+<style>
+.header{
+    font-weight: bold;
+    font-size: 50px;
+    text-align: center;
+    color: maroon;
+    border-bottom: 1px dotted darkolivegreen;
+    border-top: 1px dotted darkolivegreen;
+}
+
+#timestring{
+    font-size:20px;
+    color: slateblue;
+}
+
+body {
+    background-color: rgb(228, 203, 203);
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    padding: 25px;
+    }
+
+#source-link:visited{
+    color:purple;
+}
+#source-link:hover{
+    color: red;
+}
+
+table, th, td{
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid brown;
+    padding: 10px;
+    width: 80%;
+    font-size: 20px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+</style>
+</head>
+<body>
+<div>
+    <h2 class="header">Pollutant Standard Index (PSI) in Singapore </h2>
+    <h3> <img src = "https://data.gov.sg/images/logo.svg", alt = "PSI Logo"/></h3>
+        <p>Data extracted from <a id="sourcelink" href="https://data.gov.sg/dataset/psi" target="_blank"> Data.gov.sg </p>
+    <h4 id="timestring"></h4>
+</div>
+
+<table id="PSItable">
+    <tr>
+        <th>Metric</th>
+        <th>National</th>
+        <th>Central</th>
+        <th>West</th>
+        <th>East</th>
+        <th>North</th>
+        <th>South</th>
+    </tr>
+</table>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+
+ /* to make a function that adds data to tables*/
+ var tableadd = (datapt, rownum) => {
+    var td = document.createElement('td')
+    td.textContent = datapt
+    rownum.appendChild(td)
+    }
+
+fetch('https://api.data.gov.sg/v1/environment/psi')
+  .then(response => response.json())
+  .then(data => {
+    /* to get readings*/
+    var table = document.querySelector('#PSItable')
+    var read = data.items[0].readings
+    let timestamp = data.items[0].update_timestamp;
+    $("#timestring").text(timestamp);
+    
+    /* for loop to put in rows in table*/
+    for (var data in read) {
+        var trow = document.createElement('tr')
+        table.appendChild(trow)
+
+        tableadd(data, trow)
+
+        for (var field of ['national', 'central', 'west', 'east', 'north', 'south'])
+            tableadd(read[data][field], trow)
+    }
+   
+  
+  });
+  
+    let timestamp = data.items[0].update_timestamp;
+    let readings = data.items[0].readings;
+    console.log(timestamp);
+    console.log(readings);
+    
+    $("#timestring").text(timestamp);
+  
+
+
+</script>
+</body>
+</html>
